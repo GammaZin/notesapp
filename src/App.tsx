@@ -10,21 +10,30 @@ import {
   Image,
   Grid,
   Divider,
-} from "@aws-amplify/ui-react";
+} 
+from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
 import { getUrl } from "aws-amplify/storage";
 import { uploadData } from "aws-amplify/storage";
 import { generateClient } from "aws-amplify/data";
 import outputs from "../amplify_outputs.json";
+import type { Schema } from '../amplify/data/resource'; // Path to your backend resource definition
 /**
  * @type {import('aws-amplify/data').Client<import('../amplify/data/resource').Schema>}
  */
 
 Amplify.configure(outputs);
-const client = generateClient({
-  authMode: "userPool",
+
+const client = generateClient<Schema>({
+  authMode: 'apiKey',
 });
+
+// Now you should be able to make CRUDL operations with the
+// Data client
+const fetchTodos = async () => {
+  const { data: todos, errors } = await client.models.Todo.list();
+};
 
 export default function App() {
   const [notes, setNotes] = useState([]);
